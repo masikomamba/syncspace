@@ -251,7 +251,7 @@ app.post('/api/ai/chat', async (req, res) => {
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     
     const fullPrompt = `
       You are an AI coding assistant and pair programming partner inside a collaborative workspace.
