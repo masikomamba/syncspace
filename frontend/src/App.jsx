@@ -4,6 +4,7 @@ import VideoGrid from './features/video/VideoGrid';
 import CodeEditor from './features/editor/CodeEditor';
 import RichTextEditor from './features/editor/RichTextEditor';
 import AIAssistant from './features/ai/AIAssistant';
+import FileManager from './features/files/FileManager';
 import AuthScreen from './features/auth/AuthScreen';
 import { useAuth } from './context/AuthContext';
 import {
@@ -13,7 +14,8 @@ import {
   FileText,
   Bot,
   Settings,
-  Users
+  Users,
+  FolderOpen
 } from 'lucide-react';
 import './index.css';
 
@@ -84,6 +86,14 @@ function App() {
         >
           <Bot size={22} />
         </button>
+
+        <button 
+          className={`icon-btn ${rightPanel === 'files' ? 'active' : ''}`}
+          onClick={() => toggleRightPanel('files')}
+          title="Cloud Files"
+        >
+          <FolderOpen size={22} />
+        </button>
         
         <button className="icon-btn" title="Settings" onClick={logout}>
           <Settings size={22} />
@@ -133,6 +143,7 @@ function App() {
                 {rightPanel === 'chat' && 'Team Chat'}
                 {rightPanel === 'ai' && 'Gemini AI Assistant'}
                 {rightPanel === 'video' && 'Video Call'}
+                {rightPanel === 'files' && 'Cloud Files'}
               </h3>
               <button className="icon-btn" onClick={() => setRightPanel('closed')}>
                 &times;
@@ -142,6 +153,7 @@ function App() {
               {rightPanel === 'chat' && <ChatPanel roomId="sandbox-1" username={user.username} userId={user.id} />}
               {rightPanel === 'ai' && <AIAssistant getEditorContext={() => "Current document context would go here."} />}
               {rightPanel === 'video' && <VideoGrid roomId="sandbox-1" onClose={() => setRightPanel('closed')} />}
+              {rightPanel === 'files' && <FileManager />}
             </div>
           </div>
         </div>
