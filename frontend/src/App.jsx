@@ -4,12 +4,14 @@ import VideoGrid from './features/video/VideoGrid';
 import CodeEditor from './features/editor/CodeEditor';
 import RichTextEditor from './features/editor/RichTextEditor';
 import AIAssistant from './features/ai/AIAssistant';
-import { 
-  MonitorPlay, 
-  MessageSquare, 
-  Code2, 
-  FileText, 
-  Bot, 
+import AuthScreen from './features/auth/AuthScreen';
+import { useAuth } from './context/AuthContext';
+import {
+  MonitorPlay,
+  MessageSquare,
+  Code2,
+  FileText,
+  Bot,
   Settings,
   Users
 } from 'lucide-react';
@@ -25,6 +27,7 @@ const Placeholder = ({ title, icon: Icon }) => (
 );
 
 function App() {
+  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('code');
   const [rightPanel, setRightPanel] = useState('chat'); // 'chat', 'ai', 'video', or 'closed'
 
@@ -35,6 +38,10 @@ function App() {
       setRightPanel(panel);
     }
   };
+
+  if (!user) {
+    return <AuthScreen />;
+  }
 
   return (
     <div className="app-container">
@@ -78,7 +85,7 @@ function App() {
           <Bot size={22} />
         </button>
         
-        <button className="icon-btn" title="Settings">
+        <button className="icon-btn" title="Settings" onClick={logout}>
           <Settings size={22} />
         </button>
       </div>
@@ -97,7 +104,7 @@ function App() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-secondary)' }}>
               <Users size={16} />
-              <span style={{ fontSize: '0.9rem' }}>1 Online</span>
+              <span style={{ fontSize: '0.9rem' }}>{user.username} (Online)</span>
             </div>
             <button className="btn-primary" onClick={() => toggleRightPanel('video')}>
               <MonitorPlay size={16} style={{ marginRight: '6px', display: 'inline' }} />
@@ -132,9 +139,9 @@ function App() {
               </button>
             </div>
             <div className="panel-content" style={{ display: 'flex', flexDirection: 'column' }}>
-              {rightPanel === 'chat' && <ChatPanel roomId="sandbox-1" username={`User_${Math.floor(Math.random() * 1000)}`} />}
+              {rightPanel === 'chat' && <ChatPanel roomId="sandbox-1" username={user.username} userId={user.id} />}
               {rightPanel === 'ai' && <AIAssistant getEditorContext={() => "Current document context would go here."} />}
-              {rightPanel === 'video' && <VideoGrid roomId="sandbox-1" />}
+              {rightPanel === 'video' && <VideoGrid roomId="sandbox-1" onClose={() => setRightPanel('closed')} />}
             </div>
           </div>
         </div>

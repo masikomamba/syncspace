@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Mic, MicOff, Video, VideoOff } from 'lucide-react';
+import { Mic, MicOff, Video, VideoOff, PhoneOff } from 'lucide-react';
 import { io } from 'socket.io-client';
 
 // Connect to the signaling server
 const socketHost = window.location.hostname === 'localhost' ? 'http://localhost:8080' : '/';
 const socket = io(socketHost);
 
-const VideoGrid = ({ roomId = 'sandbox-1' }) => {
+const VideoGrid = ({ roomId = 'sandbox-1', onClose }) => {
   const localVideoRef = useRef(null);
   const [remoteStreams, setRemoteStreams] = useState({});
   const [isMuted, setIsMuted] = useState(false);
@@ -198,6 +198,16 @@ const VideoGrid = ({ roomId = 'sandbox-1' }) => {
         >
           {isVideoOff ? <VideoOff size={20} /> : <Video size={20} />}
         </button>
+        {onClose && (
+          <button 
+            onClick={onClose} 
+            className="icon-btn" 
+            style={{ background: 'var(--accent-red)', color: 'white', marginLeft: 'auto' }}
+            title="End Call"
+          >
+            <PhoneOff size={20} />
+          </button>
+        )}
       </div>
 
     </div>

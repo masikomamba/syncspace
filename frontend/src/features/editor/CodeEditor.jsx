@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Download } from 'lucide-react';
 import Editor from '@monaco-editor/react';
 import * as Y from 'yjs';
 import { WebsocketProvider } from 'y-websocket';
@@ -81,8 +82,28 @@ const CodeEditor = ({ roomId = 'sandbox-1', username = `User_${Math.floor(Math.r
     };
   }, []);
 
+  const handleSaveCode = () => {
+    if (!editorRef.current) return;
+    const code = editorRef.current.getValue();
+    const blob = new Blob([code], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `SyncSpace_Code_${Date.now()}.js`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div style={{ height: '100%', width: '100%', borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+    <div style={{ position: 'relative', height: '100%', width: '100%', borderRadius: 'var(--radius-lg)', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+      <button 
+        onClick={handleSaveCode}
+        className="icon-btn glass-panel"
+        style={{ position: 'absolute', top: '16px', right: '32px', zIndex: 10, padding: '6px 12px', fontSize: '0.8rem', color: 'white' }}
+        title="Download Code"
+      >
+        <Download size={14} style={{ marginRight: '6px' }} /> Export JS
+      </button>
       <Editor
         height="100%"
         defaultLanguage="javascript"
